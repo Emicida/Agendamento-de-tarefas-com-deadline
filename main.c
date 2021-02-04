@@ -47,10 +47,10 @@ int main(){
 					vetor[i].id = i;
 					printf("Defina a tarefa:\n");
 					scanf("%s",&vetor[i].nome);
-					printf(" Data e hora em que a tarefa estar· disponÌvel para ser realizada...\n");
+					printf(" Data e hora em que a tarefa estar√° dispon√≠vel para ser realizada...\n");
 					printf("\n   Dia: ");
 					scanf("%d",&vetor[i].inicio.dia);
-					printf("\n   MÍs: ");
+					printf("\n   M√™s: ");
 					scanf("%d",&vetor[i].inicio.mes);
 					printf("\n   Ano: ");
 					scanf("%d",&vetor[i].inicio.ano);
@@ -58,12 +58,12 @@ int main(){
 					scanf("%d",&vetor[i].inicio.hora);
 					printf("\n   Minuto: ");
 					scanf("%d",&vetor[i].inicio.minuto);
-					printf("\nTempo (em minutos) necess·rio para realizaÁ„o da tarefa: ");
+					printf("\nTempo (em minutos) necess√°rio para realiza√ß√£o da tarefa: ");
 					scanf("%d",&vetor[i].duracao);
-					printf("\nPrazo m·ximo para conclus„o...\n");
+					printf("\nPrazo m√°ximo para conclus√£o...\n");
 					printf("\n   Dia: ");
 					scanf("%d",&vetor[i].deadline.dia);
-					printf("\n   MÍs: ");
+					printf("\n   M√™s: ");
 					scanf("%d",&vetor[i].deadline.mes);
 					printf("\n   Ano: ");
 					scanf("%d",&vetor[i].deadline.ano);
@@ -81,7 +81,7 @@ int main(){
 			case 3:
 				system("cls");
 				vetor=excluir(vetor, t);
-				printf("\n Registro excluÌdo !");
+				printf("\n Registro exclu√≠do !");
 				system("pause");
 				t=t-1;
 				break;
@@ -97,7 +97,7 @@ int main(){
 				break;
 			default:
 				system("cls");
-				printf("OP«√O N√O CADASTRADA!\n");  
+				printf("OP√á√ÉO N√ÉO CADASTRADA!\n");  
 				system("pause");
 				break;
 
@@ -107,18 +107,14 @@ int main(){
 
 void mostraMenu(){
 	system("cls");//limpa a tela
-	printf("|      CADASTRO DE FUNCION¡RIOS      |\n");
+	printf("|      CADASTRO DE FUNCION√ÅRIOS      |\n");
 	printf("|____________________________________|\n");
-	printf("|           MENU DE OP«’ES           |\n");
+	printf("|           MENU DE OP√á√ïES           |\n");
 	printf("|------------------------------------|\n");
 	printf("| 1 - INCLUIR NOVA TAREFA            |\n");
 	printf("| 2 - VISUALIZAR TAREFAS CADASTRADAS |\n");
 	printf("| 3 - EXCLUIR TAREFA                 |\n");	
 	printf("| 4 - EDITAR TAREFA                  |\n");
-	printf("| 5 - CARREGAR ARQUIVO DE TAREFAS    |\n");
-	printf("| 6 - GERAR ARQUIVO DE TAREFAS       |\n");
-	printf("| 7 - COMPUTAR AGENDA DO DIA         |\n");
-	printf("| 8 - SALVAR A AGENDA DO DIA         |\n");
 	printf("| 0 - SAIR                           |\n");
 	printf("|------------------------------------|\n");
 }
@@ -128,9 +124,9 @@ void imprimeTodos(tarefa *v, int t){
 	for(j=0;j<t;j++){
 		printf("\n ID: %d\n",v[j].id);
 		printf("Nome: %c\n",v[j].nome);
-		printf("InÌcio: ComeÁa em %d/%d/%d ·s %d:%d\n",v[j].inicio.dia,v[j].inicio.mes,v[j].inicio.ano,v[j].inicio.hora,v[j].inicio.minuto);
-		printf("DuraÁ„o: %d minutos\n",v[j].duracao);
-		printf("Deadline: Acaba em %d/%d/%d ·s %d:%d\n",v[j].deadline.dia,v[j].deadline.mes,v[j].deadline.ano,v[j].deadline.hora,v[j].deadline.minuto);
+		printf("In√≠cio: Come√ßa em %d/%d/%d √°s %d:%d\n",v[j].inicio.dia,v[j].inicio.mes,v[j].inicio.ano,v[j].inicio.hora,v[j].inicio.minuto);
+		printf("Dura√ß√£o: %d minutos\n",v[j].duracao);
+		printf("Deadline: Acaba em %d/%d/%d √°s %d:%d\n",v[j].deadline.dia,v[j].deadline.mes,v[j].deadline.ano,v[j].deadline.hora,v[j].deadline.minuto);
 	}
 }
 
@@ -157,10 +153,10 @@ tarefa * excluir(tarefa *v, int t){
 
 void editar_tarefas(tarefa *v, int edit){
 	int ed,escolha;
-	printf("	Selecione qual opÁ„o quer editar: \n");
+	printf("	Selecione qual op√ß√£o quer editar: \n");
 	printf(" 		1) Nome\n");
-	printf(" 		2) InÌco\n");
-	printf(" 		3) DuraÁ„o\n");
+	printf(" 		2) In√≠co\n");
+	printf(" 		3) Dura√ß√£o\n");
 	printf("		4) Deadline\n");
 	scanf("%d",&ed);
 		switch(ed){
@@ -177,15 +173,15 @@ void editar_tarefas(tarefa *v, int edit){
 				else
 				break;
 			case 2:
-				printf("InÌcio antigo: %d/%d/%d ·s %d:%d\n",v[edit].inicio.dia,v[edit].inicio.mes,v[edit].inicio.ano,v[edit].inicio.hora,v[edit].inicio.minuto);
+				printf("In√≠cio antigo: %d/%d/%d √°s %d:%d\n",v[edit].inicio.dia,v[edit].inicio.mes,v[edit].inicio.ano,v[edit].inicio.hora,v[edit].inicio.minuto);
 				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
 				scanf("%d",escolha);
 				if (escolha==1){
-					printf("Defina o novo inÌco:\n");
+					printf("Defina o novo in√≠co:\n");
 					fflush(stdin);
 					printf("\n   Dia: ");
 					scanf("%d",&v[edit].inicio.dia);
-					printf("\n   MÍs: ");
+					printf("\n   M√™s: ");
 					scanf("%d",&v[edit].inicio.mes);
 					printf("\n   Ano: ");
 					scanf("%d",&v[edit].inicio.ano);
@@ -198,11 +194,11 @@ void editar_tarefas(tarefa *v, int edit){
 				else
 					break;
 			case 3:
-				printf("DuraÁ„o antiga: %s \n",&v[edit].duracao);
+				printf("Dura√ß√£o antiga: %s \n",&v[edit].duracao);
 				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
 				scanf("%d",escolha);
 				if (escolha==1){
-					printf("Defina a nova duraÁ„o:\n");
+					printf("Defina a nova dura√ß√£o:\n");
 					fflush(stdin);
 					scanf("%d",&v[edit].duracao);
 					break;
@@ -210,7 +206,7 @@ void editar_tarefas(tarefa *v, int edit){
 				else
 				break;
 			case 4:
-				printf("Prazo antigo: %d/%d/%d ·s %d:%d\n",v[edit].deadline.dia,v[edit].deadline.mes,v[edit].deadline.ano,v[edit].deadline.hora,v[edit].deadline.minuto);
+				printf("Prazo antigo: %d/%d/%d √°s %d:%d\n",v[edit].deadline.dia,v[edit].deadline.mes,v[edit].deadline.ano,v[edit].deadline.hora,v[edit].deadline.minuto);
 				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
 				scanf("%d",escolha);
 				if (escolha==1){
@@ -218,7 +214,7 @@ void editar_tarefas(tarefa *v, int edit){
 					fflush(stdin);
 					printf("\n   Dia: ");
 					scanf("%d",&v[edit].deadline.dia);
-					printf("\n   MÍs: ");
+					printf("\n   M√™s: ");
 					scanf("%d",&v[edit].deadline.mes);
 					printf("\n   Ano: ");
 					scanf("%d",&v[edit].deadline.ano);
@@ -231,7 +227,7 @@ void editar_tarefas(tarefa *v, int edit){
 				else
 				break;
 			default:
-				printf("OP«√O N√O V¡LIDA!\n");  
+				printf("OP√á√ÉO N√ÉO V√ÅLIDA!\n");  
 				system("pause");
 				break;
 		}
