@@ -3,340 +3,36 @@
 #include <locale.h>
 #include <string.h>
 #include <stdbool.h>
-#include <time.h>
+#define true 1
+#define false 0
 
- /*struct tempo{
+ struct tempo{
  	int dia;
  	int mes;
  	int ano;
  	int hora;
  	int minuto;
- };*/
+ };
  
  struct reg{
+ 	int id;
 	char nome;
-	struct tm inicio;
-	int duracao;
-	struct tm deadline;
+ 	struct tempo inicio;
+ 	int duracao;
+ 	struct tempo deadline;
  };
 
-typedef struct tarefa nodo;
- 
- struct tarefa{
-	nodo * prox;
-	nodo * ant;
-	int id;
-	struct reg dado;
- };
- 
-void mostraMenu(){
-	system("cls");//limpa a tela
-	printf("|      CADASTRO DE FUNCIONÁRIOS      |\n");
-	printf("|____________________________________|\n");
-	printf("|           MENU DE OPÇÕES           |\n");
-	printf("|------------------------------------|\n");
-	printf("| 1 - INCLUIR NOVA TAREFA            |\n");
-	printf("| 2 - VISUALIZAR TAREFAS CADASTRADAS |\n");
-	printf("| 3 - EXCLUIR TAREFA                 |\n");	
-	printf("| 4 - EDITAR TAREFA                  |\n");
-	printf("| 5 - CARREGAR ARQUIVO               |\n");
-	printf("| 6 - GERAR ARQUIVO                  |\n");
-	printf("| 7 - COMPUTAR AGENDA                |\n");
-	printf("| 8 - SALVAR A AGENDA                |\n");
-	printf("| 0 - SAIR                           |\n");
-	printf("|------------------------------------|\n");
-}
+typedef struct reg tarefa;
 
-nodo * inserir(nodo *l, int i){
-	int ano,mes;
-	nodo *n;
-	nodo *p;
-	p=l;
-	n= (nodo *)malloc (sizeof(nodo));
-	printf("ID: %d \n",i);
-	n->id=i;
-	printf("Defina a tarefa:\n");
-	scanf("%s",n->dado.nome);
-	printf(" Data e hora em que a tarefa estara disponível para ser realizada.\n");
-	printf("\n   Data (dd/mm/aaaa): ");
-	scanf("%d/%d/%d", &n->dado.inicio.tm_mday, &mes, &ano);
-	n->dado.inicio.tm_mon = mes - 1;
-	n->dado.inicio.tm_year = ano - 1900;
-	printf("\n   Horário (hh:mm): ");
-	scanf("%d:%d",&n->dado.inicio.tm_hour, &n->dado.inicio.tm_min );
-	printf("\nTempo (em minutos) necessário para realização da tarefa: ");
-	scanf("%d",&n->dado.duracao);
-	printf("\nPrazo máximo para conclusão...\n");
-	printf("\n   Data (dd/mm/aaaa): ");
-	scanf("%d/%d/%d", &n->dado.deadline.tm_mday, &mes, &ano);
-    n->dado.deadline.tm_mon = mes - 1;
-    n->dado.deadline.tm_year = ano - 1900;
-	printf("\n   Horário (hh:mm): ");
-	scanf("%d:%d",&n->dado.deadline.tm_hour, &n->dado.deadline.tm_min);
-	n->prox=NULL;
-	if(p!=NULL){
-		while(p->prox!=NULL){
-			p=p->prox;
-		}
-		p->prox=n;
-		n->ant = p;
-	}
-	else{ //lista vazia
-		l=n;
-	}
-	return (n);
-}
-
-void imprime_lista(nodo *l){
-	nodo *p;
-	p=l;
-	while(p!=NULL){
-		printf("\n ID: %d\n",p->id);
-		printf("Nome: %s\n",p->dado.nome);
-		printf("Início: Começa em %d/%d/%d ás %d:%d\n",p->dado.inicio.tm_mday,p->dado.inicio.tm_mon,p->dado.inicio.tm_year,p->dado.inicio.tm_hour,p->dado.inicio.tm_min);
-		printf("Duração: %d minutos\n",p->dado.duracao);
-		printf("Deadline: Acaba em %d/%d/%d ás %d:%d\n",p->dado.deadline.tm_mday,p->dado.deadline.tm_mon,p->dado.deadline.tm_year,p->dado.deadline.tm_hour,p->dado.deadline.tm_min);
-		p=p->prox;
-	}
-	return;
-}
-
-nodo * remover(nodo *l, int pos){
-	int x;
-	nodo *p=l;
-	printf("Tarefa escolhida: %c\n",p->dado.nome);
-	printf("Tem certeza que deseja excluir? (Digite 1 para SIM)\n ");
-	scanf("%d",x);
-	if(x==1){
-		while(p!=NULL && p->id != pos){
-		p=p->prox;
-		}
-		if(p == NULL){
-			printf("valor nao encontrado!\n");
-			return l;
-		}
-		else{
-			if(p->ant==NULL){
-				l=p->prox;
-			}
-			else{
-				p->ant->prox = p->prox;
-				p->prox->ant = p->ant;
-			}
-			free(p);
-		}
-	}
-	return (l);
-}
-
-void editar(nodo *l, int edit){
-	int ed,escolha,mes,ano;
-	nodo *p=l;
-	while (p != NULL && p->id != edit){
-   		p = p->prox;
-	}
-	printf("	Selecione qual opção quer editar: \n");
-	printf(" 		1) Nome\n");
-	printf(" 		2) Início\n");
-	printf(" 		3) Duração\n");
-	printf("		4) Deadline\n");
-	scanf("%d",&ed);
-		switch(ed){
-			case 1:
-				printf("Nome antigo: %s \n",&p->dado.nome);
-				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
-				scanf("%d",escolha);
-				if (escolha==1){
-					printf("Defina um novo nome:\n");
-					fflush(stdin);
-					scanf("%s",&p->dado.nome);
-					break;
-				}
-				else
-				break;
-			case 2:
-				printf("InÃ­cio antigo: %d/%d/%d Ã¡s %d:%d\n",p->dado.inicio.tm_mday,p->dado.inicio.tm_mon,p->dado.inicio.tm_year,p->dado.inicio.tm_hour,p->dado.inicio.tm_min);
-				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
-				scanf("%d",escolha);
-				if (escolha==1){
-					printf("Defina o novo início:\n");
-					fflush(stdin);
-					printf("\n   Data (dd/mm/aaaa): ");
-					scanf("%d/%d/%d", &p->dado.inicio.tm_mday, &mes, &ano);
-					p->dado.inicio.tm_mon = mes - 1;
-					p->dado.inicio.tm_year = ano - 1900;
-					printf("\n   Horário: ");
-					scanf("%d",&p->dado.inicio.tm_hour, &p->dado.inicio.tm_min);
-					break;
-				}
-				else
-					break;
-			case 3:
-				printf("Duração antiga: %s \n",&p->dado.duracao);
-				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
-				scanf("%d",escolha);
-				if (escolha==1){
-					printf("Defina a nova duraÃ§Ã£o:\n");
-					fflush(stdin);
-					scanf("%d",&p->dado.duracao);
-					break;
-				}
-				else
-				break;
-			case 4:
-				printf("Prazo antigo: %d/%d/%d Ã¡s %d:%d\n",p->dado.deadline.tm_mday,p->dado.deadline.tm_mon,p->dado.deadline.tm_year,p->dado.deadline.tm_hour,p->dado.deadline.tm_min);
-				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
-				scanf("%d",escolha);
-				if (escolha==1){
-					printf("Defina o novo prazo:\n");
-					fflush(stdin);
-					printf("\n   Data (dd/mm/aaaa): ");
-					scanf("%d",&p->dado.deadline.tm_mday, &mes, &ano);
-					p->dado.deadline.tm_mon = mes - 1;
-    				p->dado.deadline.tm_year = ano - 1900;
-					printf("\n   Horário (hh/mm): ");
-					scanf("%d",&p->dado.deadline.tm_hour, &p->dado.deadline.tm_min);
-					break;
-				}
-			default:
-				printf("OPÇÃO NÃO VÁLIDA!\n");  
-				system("pause");
-				break;
-		}
-}
-
-void criar_arquivo(nodo *l){
-	FILE * arq;
-	nodo *p;
-	p=l;
-	arq = fopen("Tarefa.txt", "wb");
-		while(p!=NULL){
-			fprintf(arq,"\n %d",p->id);
-			fprintf(arq," %s,",p->dado.nome);
-			fprintf(arq," %d/",p->dado.inicio.tm_mday);
-			fprintf(arq,"%d/",p->dado.inicio.tm_mon);
-			fprintf(arq,"%d -",p->dado.inicio.tm_year);
-			fprintf(arq," %d:",p->dado.inicio.tm_hour);
-			fprintf(arq,"%d, ",p->dado.inicio.tm_min);
-			fprintf(arq," %d min, ",p->dado.duracao);
-			fprintf(arq," %d/",p->dado.deadline.tm_mday);
-			fprintf(arq,"%d/",p->dado.deadline.tm_mon);
-			fprintf(arq,"%d -",p->dado.deadline.tm_year);
-			fprintf(arq," %d:",p->dado.deadline.tm_hour);
-			fprintf(arq,"%d\n",p->dado.deadline.tm_min);
-			p=p->prox;
-		}
-		if (arq == NULL){
-			printf("Problemas na abertura do arquivo\n");
-			fclose(arq);
-		}
-}
-
-void criar_agenda(nodo *ord){
-	FILE * agen;
-	nodo *p;
-	p=ord;
-	agen = fopen("Agenda.txt", "wb");
-		while(p!=NULL){
-			fprintf(agen,"\n %d",p->id);
-			fprintf(agen," %s,",p->dado.nome);
-			fprintf(agen," %d/",p->dado.inicio.tm_mday);
-			fprintf(agen,"%d/",p->dado.inicio.tm_mon);
-			fprintf(agen,"%d -",p->dado.inicio.tm_year);
-			fprintf(agen," %d:",p->dado.inicio.tm_hour);
-			fprintf(agen,"%d, ",p->dado.inicio.tm_min);
-			fprintf(agen," %d min, ",p->dado.duracao);
-			fprintf(agen," %d/",p->dado.deadline.tm_mday);
-			fprintf(agen,"%d/",p->dado.deadline.tm_mon);
-			fprintf(agen,"%d -",p->dado.deadline.tm_year);
-			fprintf(agen," %d:",p->dado.deadline.tm_hour);
-			fprintf(agen,"%d\n",p->dado.deadline.tm_min);
-			p=p->prox;
-		}
-		if (agen == NULL){
-		printf("Problemas na abertura do arquivo\n");
-		fclose(agen);
-	}
-}
-
-void troca_valor(nodo *x, nodo *y){
- nodo tmp; // ponteiro temporário
- tmp = *x; // recebe conteudo do x
- *x = *y; // x recebe conteudo do y
- *y=tmp; // y recebe conteudo do x
-//Y recebe a posição de x
- y->prox = x->prox;
- y->ant = x->ant;
-// X recebe a posição de y
- x->prox=tmp.prox;
- x->ant=tmp.ant;
-}
-
-void * bubbleSort(nodo *l){
-	time_t t1, t2;
-	nodo *p, *a, *next;
-	int trocou;
-	p=l;
-	while(p!=NULL){
-		a=p;
-		next=a->prox;
-		trocou=0;
-		while(next!=NULL){
-			t1 = mktime(&a->dado.deadline);
-			t2 = mktime(&next->dado.deadline); 
-			if(t1>t2){
-				troca_valor(a,next);
-				trocou=1;
-			}
-			a=next;
-			next=next->prox;
-		}
-		if(!trocou) return;
-		p=p->prox;
-	}
-}
-
-nodo* passa_nodo( nodo* l, nodo* ord ){
-    nodo* p;
-    for (p = l; p; p = p->prox){
-        nodo* novo = (nodo*) malloc(sizeof(nodo));
-   		novo->dado = p->dado;
-   		novo->prox = l;
-    }
-    return ord;
-}
-
-nodo * interval_scheduling(nodo *l, nodo *ord){
-	struct tm *data;
-	struct tm *data_atual;
-	time_t segundos;
-	time(&segundos);
-	data = localtime(&segundos);  
-	data_atual->tm_mday=data->tm_mday;
-	data_atual->tm_mon=((data->tm_mon)+1);
-	data_atual->tm_year=((data->tm_year)+1900);
-	data_atual->tm_hour=data->tm_hour;
-	data_atual->tm_min=data->tm_min;
-	data_atual->tm_sec= data->tm_sec;
-	time_t x,y,hj;
-	bubbleSort(l); // Ordenada a lista base
-	while (l->prox!=NULL){// Verifica se é compatível
-		x = mktime(&l->dado.deadline);
-    	y = mktime(&ord->dado.inicio);
-		hj = mktime(data_atual); 
-		 if(x < y && x == hj){
-			passa_nodo(l,ord); // Passa conteúdo da lista l para a ordenada
-			l=l->prox; // Segue para o proximo da lista base
-			}
-	}
-	return (ord);
-}
+void mostraMenu();
+void imprimeTodos(tarefa *v, int t);
+tarefa *excluir(tarefa *v, int t);
+void editar_tarefas(tarefa *v, int edit);
 
 int main(){
 	setlocale(LC_ALL, "Portuguese");
-	int op,i=0,edit,t;
-	nodo *l; // Criando lista que vai servir como base
-	nodo *ord; // Lista ordenada
+	tarefa *vetor;
+	int op,i,edit,t;
 	do{
 		mostraMenu();
 		scanf("%d",&op);
@@ -345,55 +41,62 @@ int main(){
 				system("cls");
 				printf("Quantas tarefas deseja cadastrar? \n");
 				scanf("%d",&t);
-				while(i<t){
-					inserir(l,i);
-					i++;
+				vetor=(tarefa*)malloc(t*sizeof(tarefa));
+				for(i=0;i<t;i++){
+					printf("ID: %d \n",i);
+					vetor[i].id = i;
+					printf("Defina a tarefa:\n");
+					scanf("%s",&vetor[i].nome);
+					printf(" Data e hora em que a tarefa estarÃ¡ disponÃ­vel para ser realizada...\n");
+					printf("\n   Dia: ");
+					scanf("%d",&vetor[i].inicio.dia);
+					printf("\n   MÃƒÂªs: ");
+					scanf("%d",&vetor[i].inicio.mes);
+					printf("\n   Ano: ");
+					scanf("%d",&vetor[i].inicio.ano);
+					printf("\n   Hora: ");
+					scanf("%d",&vetor[i].inicio.hora);
+					printf("\n   Minuto: ");
+					scanf("%d",&vetor[i].inicio.minuto);
+					printf("\nTempo (em minutos) necessÃ¡rio para realizaÃ§Ã£o da tarefa: ");
+					scanf("%d",&vetor[i].duracao);
+					printf("\nPrazo mÃ¡ximo para conclusÃ£o...\n");
+					printf("\n   Dia: ");
+					scanf("%d",&vetor[i].deadline.dia);
+					printf("\n   MÃªs: ");
+					scanf("%d",&vetor[i].deadline.mes);
+					printf("\n   Ano: ");
+					scanf("%d",&vetor[i].deadline.ano);
+					printf("\n   Hora: ");
+					scanf("%d",&vetor[i].deadline.hora);
+					printf("\n   Minuto: ");
+					scanf("%d",&vetor[i].deadline.minuto);
 				}
 				break;
 			case 2:
 				system("cls");
-				imprime_lista(l);
+				imprimeTodos(vetor,t);
 				system("pause");
 				break;
 			case 3:
 				system("cls");
-				int pos;
-				printf("Digite o ID da tarefa que quer excluir:\n");
-				scanf("%d",&pos);
-				remover(l,pos);
-				printf("\n Registro excluído!");
+				vetor=excluir(vetor, t);
+				printf("\n Registro excluÃ­do !");
 				system("pause");
+				t=t-1;
 				break;
 			case 4:
 				system("cls");
 				printf("Digite o ID da tarefa que quer editar:\n");
 				scanf("%d",&edit);
-				editar(l,edit);
+				editar_tarefas(vetor, edit);
 				system("pause");
 				break;
-			case 5:
-				 fopen("Tarefa.txt", "rt");
-				break;
-			case 6:
-				criar_arquivo(l);
-				printf("\nArquivo criado!");
-				printf("\nSelecione opção 5 para vizualiza-lo");
-				system("pause");
-				break;
-			case 7:
-				interval_scheduling(l,ord);
-				printf("\nTarefas computadas!");
-				printf("\nSelecione a opção 8 para visualiza-las");
-				system("pause");
-				break;
-			case 8:
-				criar_agenda(ord);
-				fopen("Agenda.txt", "rt");
-			
+			case 0:
+				printf("Obrigado por usar o nosso programa!\n");  
 				break;
 			default:
-				system("cls");
-				printf("OPÇÃO NÃO CADASTRADA!\n");  
+				printf("OPÃ‡ÃƒO NÃƒOÂVÃLIDA!!!\n"); 
 				system("pause");
 				break;
 
@@ -401,3 +104,129 @@ int main(){
 	}while(op!=0);
 }
 
+void mostraMenu(){
+	system("cls");//limpa a tela
+	printf("|------------------------------------|\n");	
+	printf("|           MENU DE OPÃ‡Ã•ES           |\n");
+	printf("|------------------------------------|\n");
+	printf("| 1 - INCLUIR NOVA TAREFA            |\n");
+	printf("| 2 - VISUALIZAR TAREFAS CADASTRADAS |\n");
+	printf("| 3 - EXCLUIR TAREFA                 |\n");	
+	printf("| 4 - EDITAR TAREFA                  |\n");
+	printf("| 0 - SAIR                           |\n");
+	printf("|------------------------------------|\n");
+}
+
+void imprimeTodos(tarefa *v, int t){
+	int j;
+	for(j=0;j<t;j++){
+		printf("\n ID: %d\n",v[j].id);
+		printf("Nome: %c\n",v[j].nome);
+		printf("InÃ­cio: ComeÃ§a em %d/%d/%d Ã¡s %d:%d\n",v[j].inicio.dia,v[j].inicio.mes,v[j].inicio.ano,v[j].inicio.hora,v[j].inicio.minuto);
+		printf("DuraÃ§Ã£o: %d minutos\n",v[j].duracao);
+		printf("Deadline: Acaba em %d/%d/%d Ã¡s %d:%d\n",v[j].deadline.dia,v[j].deadline.mes,v[j].deadline.ano,v[j].deadline.hora,v[j].deadline.minuto);
+	}
+}
+
+tarefa * excluir(tarefa *v, int t){
+	int pos,escolha;
+	printf("Digite o ID da tarefa que quer excluir:\n");
+	scanf("%d",&pos);
+	printf("Tarefa escolhida: %c\n",v[pos].nome);
+	printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
+	scanf("%d",escolha);
+	if (escolha==1){
+		if(pos>=0 && pos<t){
+			int apagar;
+			for(apagar=pos;apagar<t-1;++apagar){
+				v[apagar]=v[apagar+1];
+			}
+			v=(tarefa *)realloc(v,(t-1)*sizeof(tarefa));
+		}
+	return(v);
+	}
+	else
+	system("pause");
+}
+
+void editar_tarefas(tarefa *v, int edit){
+	int ed,escolha;
+	printf("	Selecione qual opÃ§Ã£o quer editar: \n");
+	printf(" 		1) Nome\n");
+	printf(" 		2) InÃ­co\n");
+	printf(" 		3) DuraÃ§Ã£o\n");
+	printf("		4) Deadline\n");
+	scanf("%d",&ed);
+		switch(ed){
+			case 1:
+				printf("Nome antigo: %c \n",&v[edit].nome);
+				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
+				scanf("%d",escolha);
+				if (escolha==1){
+					printf("Defina um novo nome:\n");
+					fflush(stdin);
+					scanf("%s",&v[edit].nome);
+					break;
+				}
+				else
+				break;
+			case 2:
+				printf("InÃ­cio antigo: %d/%d/%d Ã¡s %d:%d\n",v[edit].inicio.dia,v[edit].inicio.mes,v[edit].inicio.ano,v[edit].inicio.hora,v[edit].inicio.minuto);
+				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
+				scanf("%d",escolha);
+				if (escolha==1){
+					printf("Defina o novo inÃ­cio:\n");
+					fflush(stdin);
+					printf("\n   Dia: ");
+					scanf("%d",&v[edit].inicio.dia);
+					printf("\n   MÃƒÂªs: ");
+					scanf("%d",&v[edit].inicio.mes);
+					printf("\n   Ano: ");
+					scanf("%d",&v[edit].inicio.ano);
+					printf("\n   Hora: ");
+					scanf("%d",&v[edit].inicio.hora);
+					printf("\n   Minuto: ");
+					scanf("%d",&v[edit].inicio.minuto);
+					break;
+				}
+				else
+					break;
+			case 3:
+				printf("DuraÃ§Ã£o antiga: %s \n",&v[edit].duracao);
+				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
+				scanf("%d",escolha);
+				if (escolha==1){
+					printf("Defina a nova duraÃ§Ã£o:\n");
+					fflush(stdin);
+					scanf("%d",&v[edit].duracao);
+					break;
+				}
+				else
+				break;
+			case 4:
+				printf("Prazo antigo: %d/%d/%d Ã¡s %d:%d\n",v[edit].deadline.dia,v[edit].deadline.mes,v[edit].deadline.ano,v[edit].deadline.hora,v[edit].deadline.minuto);
+				printf("Tem certeza que deseja mudar? (Digite 1 para SIM)\n ");
+				scanf("%d",escolha);
+				if (escolha==1){
+					printf("Defina o novo prazo:\n");
+					fflush(stdin);
+					printf("\n   Dia: ");
+					scanf("%d",&v[edit].deadline.dia);
+					printf("\n   MÃªs: ");
+					scanf("%d",&v[edit].deadline.mes);
+					printf("\n   Ano: ");
+					scanf("%d",&v[edit].deadline.ano);
+					printf("\n   Hora: ");
+					scanf("%d",&v[edit].deadline.hora);
+					printf("\n   Minuto: ");
+					scanf("%d",&v[edit].deadline.minuto);
+					break;
+				}
+				else
+				break;
+			default:
+				printf("OPÃ‡ÃƒO NÃƒOÂVÃLIDA!!!\n");  
+				system("pause");
+				break;
+		}
+}
